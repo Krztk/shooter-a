@@ -1,0 +1,122 @@
+{
+	"file": "hero.png",
+	"groups": [
+		{
+			"name": "run_right",
+			"frameWidth": 50,
+			"frameHeight": 50,
+			"positions": [
+				{
+					"x": 0,
+					"y": 0
+				},
+				{
+					"x": 50,
+					"y": 0
+				},
+				{
+					"x": 100,
+					"y": 0
+				},
+				{
+					"x": 150,
+					"y": 0
+				},
+				{
+					"x": 200,
+					"y": 0
+				},
+				{
+					"x": 0,
+					"y": 50
+				},
+				{
+					"x": 50,
+					"y": 50
+				},
+				{
+					"x": 100,
+					"y": 50
+				}
+			]
+		},
+		{
+			"name": "ladder_climb",
+			"frameWidth": 50,
+			"frameHeight": 57,
+			"positions": [
+				{
+					"x": 150,
+					"y": 50
+				},
+				{
+					"x": 200,
+					"y": 50
+				},
+				{
+					"x": 0,
+					"y": 107
+				},
+				{
+					"x": 50,
+					"y": 107
+				}
+			]
+		},
+		{
+			"name": "stand",
+			"frameWidth": 50,
+			"frameHeight": 50,
+			"positions": [
+				{
+					"x": 100,
+					"y": 107
+				}
+			]
+		},
+		{
+			"name": "duck",
+			"frameWidth": 50,
+			"frameHeight": 50,
+			"positions": [
+				{
+					"x": 150,
+					"y": 107
+				}
+			]
+		},
+		{
+			"name": "jump",
+			"frameWidth": 50,
+			"frameHeight": 50,
+			"positions": [
+				{
+					"x": 200,
+					"y": 107
+				}
+			]
+		},
+		{
+			"name": "damage",
+			"frameWidth": 50,
+			"frameHeight": 50,
+			"positions": [
+				{
+					"x": 0,
+					"y": 164
+				}
+			]
+		},
+		{
+			"name": "ladder_shoot",
+			"frameWidth": 67,
+			"frameHeight": 57,
+			"positions": [
+				{
+					"x": 50,
+					"y": 164
+				}
+			]
+		}
+	]
+}
