@@ -20,10 +20,12 @@ main :: proc() {
 
     fmt.println(heroAtlas)
 
-    pos: rl.Vector2 = {0,0}
+    pos: rl.Vector2 = {100,100}
+
+    entity := createEntity(&heroAtlas)
 
     for !rl.WindowShouldClose() {
-        // dt: f32 = rl.GetFrameTime()
+        dt: f32 = rl.GetFrameTime()
         dx, dy: f32 = 0.0, 0.0
 
         if rl.IsKeyDown(.D) { dx += 1 }
@@ -37,6 +39,8 @@ main :: proc() {
             dy /= len
         }
 
+        updateEntity(&entity, dt);
+
         // movement_x := dx * speed * dt
         // movement_y := dy * speed * dt
 
@@ -45,6 +49,7 @@ main :: proc() {
         rl.ClearBackground(rl.GRAY)
 
         rl.DrawTextureEx(heroAtlas.texture, pos, 0.0, 1.0, rl.WHITE);
+        drawEntity(&entity);
         rl.EndDrawing()
     }
 
