@@ -18,6 +18,7 @@ SpriteGroup :: struct {
     frameWidth: int,
     frameHeight: int,
     positions: [dynamic]Vector2I,
+    rects: [dynamic]rl.Rectangle,  // computed, not in the json
 }
 
 AtlasMeta :: struct {
@@ -36,6 +37,7 @@ destroyAtlas :: proc(atlas: ^Atlas) {
     for &sg in atlas.groups {
         delete(sg.name)
         delete(sg.positions)
+        delete(sg.rects)
     }
     delete(atlas.groups)
 }
@@ -55,6 +57,19 @@ loadAtlas :: proc(name: string) -> (Atlas, bool) {
     if err != nil {
         fmt.eprintfln("JSON unmarshal failed: %v", err)
         return atlas, false
+    }
+
+    // Compute rectangles for each group
+    for &sg in atlas.groups {
+        sg.rects = make([dynamic]rl.Rectangle, len(sg.positions))
+        for pos, i in sg.positions {
+            sg.rects[i] = rl.Rectangle{
+                f32(pos.x),
+                f32(pos.y),
+                f32(sg.frameWidth),
+                f32(sg.frameHeight)
+            }
+        }
     }
     
     imgPath := fmt.tprintf("%s%s", RESOURCES_PATH, atlas.file)
