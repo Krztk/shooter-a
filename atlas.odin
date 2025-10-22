@@ -42,6 +42,11 @@ destroyAtlas :: proc(atlas: ^Atlas) {
     delete(atlas.groups)
 }
 
+
+getTotalGroups :: proc(atlas: ^Atlas) -> int {
+    return len(atlas.groups)
+}
+
 loadAtlas :: proc(name: string) -> (Atlas, bool) {
     atlas: Atlas
     
@@ -77,6 +82,9 @@ loadAtlas :: proc(name: string) -> (Atlas, bool) {
     fmt.printfln("loading img from: '%s'", cStrPath)
     image := rl.LoadImage(cStrPath)
     defer rl.UnloadImage(image)
+    //TODO(editor): add option to set background color of sprite/atlas in editor
+    atlasBgColor := rl.Color{77, 75, 118, 255}
+    rl.ImageColorReplace(&image, atlasBgColor, rl.BLANK)
     atlas.texture = rl.LoadTextureFromImage(image)
     
     return atlas, true

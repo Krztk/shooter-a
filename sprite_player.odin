@@ -23,6 +23,19 @@ createSpritePlayer :: proc(atlas: ^Atlas) -> SpritePlayer {
     }
 }
 
+changeSprite :: proc(p: ^SpritePlayer, groupIndex: int) {
+    totalGroups := len(p.atlas.groups)
+    if groupIndex > totalGroups - 1 {
+        fmt.printfln("invalid index in sprite player. Total sprite groups: %v, index: %v", totalGroups, groupIndex)
+        return
+    }
+    
+    p.currentGroup = &p.atlas.groups[groupIndex]
+    p.frames = len(p.atlas.groups[groupIndex].positions)
+    p.frameIndex = 0
+    p.alarm = ALARM
+}
+
 updateSpritePlayer :: proc(p: ^SpritePlayer, dt: f32) {
     if p.frames == 1 do return
     p.alarm -= dt 

@@ -4,6 +4,10 @@ import rl "vendor:raylib"
 import "core:fmt"
 import "core:math"
 
+
+totalGroups := 0
+groupIndex := 0;
+
 main :: proc() {
     screenWidth: i32 = 1280
     screenHeight: i32 = 720
@@ -18,36 +22,26 @@ main :: proc() {
     }
     defer destroyAtlas(&heroAtlas)
 
-    fmt.println(heroAtlas)
+    // fmt.println(heroAtlas)
+    totalGroups = getTotalGroups(&heroAtlas)
+
 
     pos: rl.Vector2 = {100,100}
 
+
+    inputs: Inputs 
     gameState := initGame()
     defer clearEntities(&gameState)
-    spawnEntity(&gameState, &heroAtlas, rl.Vector2{200, 0})
+    hero := spawnEntity(&gameState, &heroAtlas, rl.Vector2{200, 0})
     spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
-
 
     for !rl.WindowShouldClose() {
         dt: f32 = rl.GetFrameTime()
         dx, dy: f32 = 0.0, 0.0
 
-        if rl.IsKeyDown(.D) { dx += 1 }
-        if rl.IsKeyDown(.A) { dx -= 1 }
-        if rl.IsKeyDown(.W) { dy -= 1 }
-        if rl.IsKeyDown(.S) { dy += 1 }
-
-        if dx != 0 && dy != 0 {
-            len: f32 = math.sqrt_f32(dx*dx + dy*dy)
-            dx /= len
-            dy /= len
-        }
-
+        updateInputs(&inputs)
+        updateHero(hero, &inputs, dt)
         updateEntities(&gameState, dt)
-
-        // movement_x := dx * speed * dt
-        // movement_y := dy * speed * dt
-
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.GRAY)
@@ -58,5 +52,13 @@ main :: proc() {
     }
 
     rl.CloseWindow()
+}
+
+
+updateHero :: proc(e: ^Entity, inputs: ^Inputs, dt: f32) {
+    if inputs.actionA.pressed {
+        groupIndex = (groupIndex + 1) % totalGroups
+        changeSprite(&e.spritePlayer, groupIndex)
+    }
 }
 
