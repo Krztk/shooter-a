@@ -22,7 +22,11 @@ main :: proc() {
 
     pos: rl.Vector2 = {100,100}
 
-    entity := createEntity(&heroAtlas)
+    gameState := initGame()
+    defer clearEntities(&gameState)
+    spawnEntity(&gameState, &heroAtlas, rl.Vector2{200, 0})
+    spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
+
 
     for !rl.WindowShouldClose() {
         dt: f32 = rl.GetFrameTime()
@@ -39,7 +43,7 @@ main :: proc() {
             dy /= len
         }
 
-        updateEntity(&entity, dt);
+        updateEntities(&gameState, dt)
 
         // movement_x := dx * speed * dt
         // movement_y := dy * speed * dt
@@ -49,7 +53,7 @@ main :: proc() {
         rl.ClearBackground(rl.GRAY)
 
         rl.DrawTextureEx(heroAtlas.texture, pos, 0.0, 1.0, rl.WHITE);
-        drawEntity(&entity);
+        drawEntities(&gameState)
         rl.EndDrawing()
     }
 
