@@ -22,25 +22,20 @@ main :: proc() {
     }
     defer destroyAtlas(&heroAtlas)
 
-    // fmt.println(heroAtlas)
     totalGroups = getTotalGroups(&heroAtlas)
-
-
     pos: rl.Vector2 = {100,100}
-
 
     inputs: Inputs 
     gameState := initGame()
     defer clearEntities(&gameState)
-    hero := spawnEntity(&gameState, &heroAtlas, rl.Vector2{200, 0})
+    spawnHero(&gameState, &heroAtlas, rl.Vector2{200, 0})
     spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
 
     for !rl.WindowShouldClose() {
         dt: f32 = rl.GetFrameTime()
-        dx, dy: f32 = 0.0, 0.0
 
         updateInputs(&inputs)
-        updateHero(hero, &inputs, dt)
+        updatePlayerInput(&gameState, &inputs)
         updateEntities(&gameState, dt)
 
         rl.BeginDrawing()
@@ -53,12 +48,3 @@ main :: proc() {
 
     rl.CloseWindow()
 }
-
-
-updateHero :: proc(e: ^Entity, inputs: ^Inputs, dt: f32) {
-    if inputs.actionA.pressed {
-        groupIndex = (groupIndex + 1) % totalGroups
-        changeSprite(&e.spritePlayer, groupIndex)
-    }
-}
-
