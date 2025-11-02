@@ -9,6 +9,7 @@ Entity :: struct {
     oldPos: rl.Vector2,
     spritePlayer: SpritePlayer,
     active: bool,
+    z: f32,
 }
 
 createEntity :: proc(atlas: ^Atlas, pos: rl.Vector2) -> Entity {

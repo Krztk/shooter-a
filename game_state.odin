@@ -8,7 +8,7 @@ MAX_ENTITIES :: 1024
 
 GameState :: struct {
     entityArena: mem.Arena,
-    entities: [MAX_ENTITIES]^Entity, 
+    enemies: [MAX_ENTITIES]^Entity, 
     hero: ^Hero,
     entityCount: i32,
 }
@@ -44,7 +44,7 @@ spawnHero :: proc(state: ^GameState, atlas: ^Atlas, pos: rl.Vector2) -> ^Hero {
     hero.entity = entity
     hero.direction = rl.Vector2{0, 0}
     
-    state.entities[state.entityCount] = entity
+    state.enemies[state.entityCount] = entity
     state.entityCount += 1
     
     state.hero = hero
@@ -62,7 +62,7 @@ spawnEntity :: proc(state: ^GameState, atlas: ^Atlas, pos: rl.Vector2) -> ^Entit
     entity := new(Entity, arenaAlloc)
     entity^ = createEntity(atlas, pos)
 
-    state.entities[state.entityCount] = entity
+    state.enemies[state.entityCount] = entity
     state.entityCount += 1
 
     return entity
@@ -93,19 +93,15 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
     }
 
     for i in 0..<state.entityCount {
-        entity := state.entities[i]
-        // Skip hero's entity since we already updated it
-        if entity == state.hero.entity {
-            continue
-        }
-
+        entity := state.enemies[i]
         updateEntity(entity, dt)
     }
 }
 
 drawEntities :: proc(state: ^GameState) {
+    drawEntity(state.hero)
     for i in 0..<state.entityCount {
-        drawEntity(state.entities[i])
+        drawEntity(state.enemies[i])
     }
 }
 
