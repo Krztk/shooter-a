@@ -31,6 +31,8 @@ main :: proc() {
     spawnHero(&gameState, &heroAtlas, rl.Vector2{200, 0})
     spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
 
+    renderFrame := initRenderFrame()
+
     for !rl.WindowShouldClose() {
         dt: f32 = rl.GetFrameTime()
 
@@ -38,11 +40,14 @@ main :: proc() {
         updatePlayerInput(&gameState, &inputs)
         updateEntities(&gameState, dt)
 
+        clearRenderFrame(&renderFrame)
+        drawEntitiesToFrame(&renderFrame, &gameState)
+        
+        // sortRenderCommands(&renderFrame)
+
         rl.BeginDrawing()
         rl.ClearBackground(rl.GRAY)
-
-        rl.DrawTextureEx(heroAtlas.texture, pos, 0.0, 1.0, rl.WHITE);
-        drawEntities(&gameState)
+        flushRenderFrame(&renderFrame)
         rl.EndDrawing()
     }
 

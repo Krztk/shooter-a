@@ -31,7 +31,12 @@ disableEntity :: proc(e: ^Entity) {
 }
 
 //TODO alpha/bend factor?
-drawEntity :: proc(e: ^Entity) {
+// drawEntity :: proc(e: ^Entity) {
+//     if !e.active do return
+//     drawSpritePlayer(&e.spritePlayer, e.pos)
+// }
+
+drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity) {
     if !e.active do return
-    drawSpritePlayer(&e.spritePlayer, e.pos)
+    drawSpritePlayerToFrame(rf, &e.spritePlayer, e.pos, e.z)
 }

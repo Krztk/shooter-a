@@ -10,6 +10,7 @@ GameState :: struct {
     entityArena: mem.Arena,
     enemies: [MAX_ENTITIES]^Entity, 
     hero: ^Hero,
+    // other entities, like pickups, bullets etc.
     entityCount: i32,
 }
 
@@ -98,10 +99,20 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
     }
 }
 
-drawEntities :: proc(state: ^GameState) {
-    drawEntity(state.hero)
+// drawEntities :: proc(state: ^GameState) {
+//     drawEntity(state.hero)
+//     for i in 0..<state.entityCount {
+//         drawEntity(state.enemies[i])
+//     }
+// }
+
+drawEntitiesToFrame :: proc(rf: ^RenderFrame, state: ^GameState) {
+    if state.hero != nil {
+        drawEntityToFrame(rf, state.hero.entity)
+    }
+    
     for i in 0..<state.entityCount {
-        drawEntity(state.enemies[i])
+        drawEntityToFrame(rf, state.enemies[i])
     }
 }
 

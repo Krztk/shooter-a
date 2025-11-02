@@ -46,7 +46,12 @@ updateSpritePlayer :: proc(p: ^SpritePlayer, dt: f32) {
     }
 }
 
-drawSpritePlayer :: proc(p: ^SpritePlayer, pos: rl.Vector2) {
+// drawSpritePlayer :: proc(p: ^SpritePlayer, pos: rl.Vector2) {
+//     rect := p.currentGroup.rects[p.frameIndex]
+//     rl.DrawTextureRec(p.atlas.texture, rect, pos, rl.WHITE)  
+// }
+
+drawSpritePlayerToFrame :: proc(rf: ^RenderFrame, p: ^SpritePlayer, pos: rl.Vector2, z: f32) {
     rect := p.currentGroup.rects[p.frameIndex]
-    rl.DrawTextureRec(p.atlas.texture, rect, pos, rl.WHITE)  
+    pushRenderCommand(rf, p.atlas.texture, rect, pos, z)
 }
