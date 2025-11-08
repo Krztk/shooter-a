@@ -31,6 +31,13 @@ main :: proc() {
     spawnHero(&gameState, &heroAtlas, rl.Vector2{200, 0})
     spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
 
+    camera := rl.Camera2D{
+        target   = rl.Vector2{0, 0},
+        offset   = rl.Vector2{f32(screenWidth / 2), f32(screenHeight / 2)},
+        rotation = 0.0,
+        zoom     = 1.0,
+    }
+
     renderFrame := initRenderFrame()
 
     for !rl.WindowShouldClose() {
@@ -45,9 +52,17 @@ main :: proc() {
         
         // sortRenderCommands(&renderFrame)
 
+        // Sync rendering camera with game camera
+        camera.target.x = math.round_f32(gameState.cameraPos.x)
+        camera.target.y = math.round_f32(gameState.cameraPos.y)
+
         rl.BeginDrawing()
         rl.ClearBackground(rl.GRAY)
+
+        rl.BeginMode2D(camera)
         flushRenderFrame(&renderFrame)
+        rl.EndMode2D()
+
         rl.EndDrawing()
     }
 

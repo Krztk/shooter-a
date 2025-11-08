@@ -5,6 +5,7 @@ import "core:fmt"
 import rl "vendor:raylib"
 
 MAX_ENTITIES :: 1024
+CAMERA_SMOOTHNESS :: 3.0
 
 GameState :: struct {
     entityArena: mem.Arena,
@@ -12,6 +13,7 @@ GameState :: struct {
     hero: ^Hero,
     // other entities, like pickups, bullets etc.
     entityCount: i32,
+    cameraPos: rl.Vector2,
 }
 
 initGame :: proc() -> GameState {
@@ -94,14 +96,13 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
         entity := state.enemies[i]
         updateEntity(entity, dt)
     }
-}
 
-// drawEntities :: proc(state: ^GameState) {
-//     drawEntity(state.hero)
-//     for i in 0..<state.entityCount {
-//         drawEntity(state.enemies[i])
-//     }
-// }
+    if state.hero != nil {
+        targetPos := state.hero.pos
+        state.cameraPos.x += (targetPos.x - state.cameraPos.x) * CAMERA_SMOOTHNESS * dt
+        state.cameraPos.y += (targetPos.y - state.cameraPos.y) * CAMERA_SMOOTHNESS * dt
+    }
+}
 
 drawEntitiesToFrame :: proc(rf: ^RenderFrame, state: ^GameState) {
     if state.hero != nil {
