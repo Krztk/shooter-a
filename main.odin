@@ -22,6 +22,13 @@ main :: proc() {
     }
     defer destroyAtlas(&heroAtlas)
 
+    tilemap, tilemapOk := loadTilemap("map_1.tmj", "bg-sprites.png")
+    if (!tilemapOk) {
+        rl.CloseWindow();
+        return;
+    }
+    defer destroyTilemap(&tilemap)
+
     totalGroups = getTotalGroups(&heroAtlas)
     pos: rl.Vector2 = {100,100}
 
@@ -60,6 +67,7 @@ main :: proc() {
         rl.ClearBackground(rl.GRAY)
 
         rl.BeginMode2D(camera)
+        drawTilemap(&tilemap, camera)
         flushRenderFrame(&renderFrame)
         rl.EndMode2D()
 
