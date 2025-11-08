@@ -45,9 +45,6 @@ spawnHero :: proc(state: ^GameState, atlas: ^Atlas, pos: rl.Vector2) -> ^Hero {
     hero.entity = entity
     hero.direction = rl.Vector2{0, 0}
     
-    state.enemies[state.entityCount] = entity
-    state.entityCount += 1
-    
     state.hero = hero
     
     return hero
