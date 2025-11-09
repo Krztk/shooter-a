@@ -4,7 +4,6 @@ import rl "vendor:raylib"
 import "core:fmt"
 import "core:math"
 
-
 totalGroups := 0
 groupIndex := 0;
 
@@ -12,7 +11,6 @@ main :: proc() {
     screenWidth: i32 = 1280
     screenHeight: i32 = 720
     rl.InitWindow(screenWidth, screenHeight, "Game")
-    // rl.SetExitKey(cast(rl.KeyboardKey)0)
 
     speed: f32 = 200.0
     heroAtlas, ok := loadAtlas("hero");
@@ -47,21 +45,40 @@ main :: proc() {
 
     renderFrame := initRenderFrame()
 
+    FIXED_DT :: 1.0 / 60.0  // 60 updates per second
+    accumulator: f32 = 0.0
+    maxFrameTime: f32 = 0.25  
+
     for !rl.WindowShouldClose() {
-        dt: f32 = rl.GetFrameTime()
+        frameTime: f32 = rl.GetFrameTime()
+        
+        if frameTime > maxFrameTime {
+            frameTime = maxFrameTime
+        }
+        
+        accumulator += frameTime
 
         updateInputs(&inputs)
-        updatePlayerInput(&gameState, &inputs)
-        updateEntities(&gameState, dt)
+
+        for accumulator >= FIXED_DT {
+            updatePlayerInput(&gameState, &inputs)
+            updateEntities(&gameState, FIXED_DT)
+            accumulator -= FIXED_DT
+        }
+
+        blendFactor: f32 = accumulator / FIXED_DT
 
         clearRenderFrame(&renderFrame)
-        drawEntitiesToFrame(&renderFrame, &gameState)
+        drawEntitiesToFrame(&renderFrame, &gameState, blendFactor)
         
-        // sortRenderCommands(&renderFrame)
-
-        // Sync rendering camera with game camera
-        camera.target.x = math.round_f32(gameState.cameraPos.x)
-        camera.target.y = math.round_f32(gameState.cameraPos.y)
+        interpCameraPos := interpolateVector2(
+            gameState.oldCameraPos, 
+            gameState.cameraPos, 
+            blendFactor
+        )
+        
+        camera.target.x = math.round_f32(interpCameraPos.x)
+        camera.target.y = math.round_f32(interpCameraPos.y)
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.GRAY)
@@ -75,4 +92,11 @@ main :: proc() {
     }
 
     rl.CloseWindow()
+}
+
+interpolateVector2 :: proc(a, b: rl.Vector2, t: f32) -> rl.Vector2 {
+    return rl.Vector2{
+        a.x + (b.x - a.x) * t,
+        a.y + (b.y - a.y) * t,
+    }
 }

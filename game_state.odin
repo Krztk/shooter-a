@@ -11,9 +11,9 @@ GameState :: struct {
     entityArena: mem.Arena,
     enemies: [MAX_ENTITIES]^Entity, 
     hero: ^Hero,
-    // other entities, like pickups, bullets etc.
     entityCount: i32,
     cameraPos: rl.Vector2,
+    oldCameraPos: rl.Vector2,
 }
 
 initGame :: proc() -> GameState {
@@ -97,6 +97,8 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
         updateEntity(entity, dt)
     }
 
+    state.oldCameraPos = state.cameraPos
+
     if state.hero != nil {
         targetPos := state.hero.pos
         state.cameraPos.x += (targetPos.x - state.cameraPos.x) * CAMERA_SMOOTHNESS * dt
@@ -104,14 +106,12 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
     }
 }
 
-drawEntitiesToFrame :: proc(rf: ^RenderFrame, state: ^GameState) {
+drawEntitiesToFrame :: proc(rf: ^RenderFrame, state: ^GameState, blendFactor: f32) {
     if state.hero != nil {
-        drawEntityToFrame(rf, state.hero.entity)
+        drawEntityToFrame(rf, state.hero.entity, blendFactor)
     }
     
     for i in 0..<state.entityCount {
-        drawEntityToFrame(rf, state.enemies[i])
+        drawEntityToFrame(rf, state.enemies[i], blendFactor)
     }
 }
-
-

@@ -23,6 +23,10 @@ createEntity :: proc(atlas: ^Atlas, pos: rl.Vector2) -> Entity {
 
 updateEntity :: proc(e: ^Entity, dt: f32) {
     if !e.active do return
+    
+    // Store old position before updating
+    e.oldPos = e.pos
+    
     updateSpritePlayer(&e.spritePlayer, dt)
 }
 
@@ -30,13 +34,14 @@ disableEntity :: proc(e: ^Entity) {
     e.active = false
 }
 
-//TODO alpha/bend factor?
-// drawEntity :: proc(e: ^Entity) {
-//     if !e.active do return
-//     drawSpritePlayer(&e.spritePlayer, e.pos)
-// }
-
-drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity) {
+drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
     if !e.active do return
-    drawSpritePlayerToFrame(rf, &e.spritePlayer, e.pos, e.z)
+    
+    // Interpolate position for smooth rendering
+    interpPos := rl.Vector2{
+        e.oldPos.x + (e.pos.x - e.oldPos.x) * blendFactor,
+        e.oldPos.y + (e.pos.y - e.oldPos.y) * blendFactor,
+    }
+    
+    drawSpritePlayerToFrame(rf, &e.spritePlayer, interpPos, e.z)
 }
