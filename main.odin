@@ -40,7 +40,7 @@ main :: proc() {
         target   = rl.Vector2{0, 0},
         offset   = rl.Vector2{f32(screenWidth / 2), f32(screenHeight / 2)},
         rotation = 0.0,
-        zoom     = 1.0,
+        zoom     = 2,
     }
 
     renderFrame := initRenderFrame()
@@ -71,14 +71,14 @@ main :: proc() {
         clearRenderFrame(&renderFrame)
         drawEntitiesToFrame(&renderFrame, &gameState, blendFactor)
         
-        interpCameraPos := interpolateVector2(
-            gameState.oldCameraPos, 
-            gameState.cameraPos, 
-            blendFactor
-        )
+        // interpCameraPos := interpolateVector2(
+        //     gameState.oldCameraPos, 
+        //     gameState.cameraPos, 
+        //     blendFactor
+        // )
         
-        camera.target.x = math.round_f32(interpCameraPos.x)
-        camera.target.y = math.round_f32(interpCameraPos.y)
+        camera.target.x = math.round_f32(gameState.cameraPos.x)
+        camera.target.y = math.round_f32(gameState.cameraPos.y)
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.GRAY)

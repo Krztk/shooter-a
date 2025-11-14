@@ -42,6 +42,13 @@ drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
         e.oldPos.x + (e.pos.x - e.oldPos.x) * blendFactor,
         e.oldPos.y + (e.pos.y - e.oldPos.y) * blendFactor,
     }
+
+    renderPos := rl.Vector2{
+        math.round(interpPos.x),
+        math.round(interpPos.y),
+    }
     
-    drawSpritePlayerToFrame(rf, &e.spritePlayer, interpPos, e.z)
+    
+    // drawSpritePlayerToFrame(rf, &e.spritePlayer, interpPos, e.z)
+    drawSpritePlayerToFrame(rf, &e.spritePlayer, renderPos, e.z)
 }

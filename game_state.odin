@@ -101,8 +101,9 @@ updateEntities :: proc(state: ^GameState, dt: f32) {
 
     if state.hero != nil {
         targetPos := state.hero.pos
-        state.cameraPos.x += (targetPos.x - state.cameraPos.x) * CAMERA_SMOOTHNESS * dt
-        state.cameraPos.y += (targetPos.y - state.cameraPos.y) * CAMERA_SMOOTHNESS * dt
+        state.cameraPos = targetPos
+        // state.cameraPos.x += (targetPos.x - state.cameraPos.x) * CAMERA_SMOOTHNESS * dt
+        // state.cameraPos.y += (targetPos.y - state.cameraPos.y) * CAMERA_SMOOTHNESS * dt
     }
 }
 
