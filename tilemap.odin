@@ -75,20 +75,20 @@ loadTilemap :: proc(mapName: string, tilesetName: string) -> (Tilemap, bool) {
     tilemap.tilewidth = tiled.tilewidth
     tilemap.layers = make([]Layer, len(tiled.layers))
 
-    for layer, i in tiled.layers {
+    for tiledLayer, i in tiled.layers {
         layer := &tilemap.layers[i]
         
-        layer.height = layer.height
-        layer.width = layer.width
-        layer.id = layer.id
-        layer.visible = layer.visible
-        layer.x = layer.x
-        layer.y = layer.y
+        layer.height = tiledLayer.height
+        layer.width = tiledLayer.width
+        layer.id = tiledLayer.id
+        layer.visible = tiledLayer.visible
+        layer.x = tiledLayer.x
+        layer.y = tiledLayer.y
         
-        layer.name = strings.clone(layer.name)
+        layer.name = strings.clone(tiledLayer.name)
         
-        layer.data = make([]int, len(layer.data))
-        copy(layer.data, layer.data)
+        layer.data = make([]int, len(tiledLayer.data))
+        copy(layer.data, tiledLayer.data)
 
         if layer.name == "collision" {
             tilemap.collisionLayer = layer
