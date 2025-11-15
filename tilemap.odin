@@ -128,7 +128,7 @@ drawTilemap :: proc(tilemap: ^Tilemap, camera: rl.Camera2D) {
 
     for layer in tilemap.layers {
         if !layer.visible do continue
-        // if layer.name == "collision" do continue
+        if layer.name == "collision" do continue
         
         for y in start_y..<end_y {
             for x in start_x..<end_x {
@@ -166,4 +166,34 @@ drawTilemap :: proc(tilemap: ^Tilemap, camera: rl.Camera2D) {
             }
         }
     }
+}
+
+isTileCollision :: proc(tilemap: ^Tilemap, tileX, tileY: int) -> bool {
+    if tilemap.collisionLayer == nil do return false
+    
+    if tileX < 0 || tileX >= tilemap.collisionLayer.width do return true
+    if tileY < 0 || tileY >= tilemap.collisionLayer.height do return true
+    
+    index := tileY * tilemap.collisionLayer.width + tileX
+    if index < 0 || index >= len(tilemap.collisionLayer.data) do return true
+    
+    // Non-zero tile ID means collision
+    return tilemap.collisionLayer.data[index] != 0
+}
+
+checkTilemapCollision :: proc(tilemap: ^Tilemap, rect: rl.Rectangle) -> bool {
+    left := int(rect.x / f32(tilemap.tilewidth))
+    right := int((rect.x + rect.width - 1) / f32(tilemap.tilewidth))
+    top := int(rect.y / f32(tilemap.tileheight))
+    bottom := int((rect.y + rect.height - 1) / f32(tilemap.tileheight))
+    
+    for y in top..=bottom {
+        for x in left..=right {
+            if isTileCollision(tilemap, x, y) {
+                return true
+            }
+        }
+    }
+    
+    return false
 }

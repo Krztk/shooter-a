@@ -31,10 +31,10 @@ main :: proc() {
     pos: rl.Vector2 = {100,100}
 
     inputs: Inputs 
-    gameState := initGame()
+    gameState := initGame(&tilemap)
     defer clearEntities(&gameState)
-    spawnHero(&gameState, &heroAtlas, rl.Vector2{200, 0})
-    spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 0})
+    spawnHero(&gameState, &heroAtlas, rl.Vector2{200, 200})
+    spawnEntity(&gameState, &heroAtlas, rl.Vector2{300, 200})
 
     camera := rl.Camera2D{
         target   = rl.Vector2{0, 0},

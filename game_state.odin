@@ -14,10 +14,12 @@ GameState :: struct {
     entityCount: i32,
     cameraPos: rl.Vector2,
     oldCameraPos: rl.Vector2,
+    tilemap: ^Tilemap,
 }
 
-initGame :: proc() -> GameState {
+initGame :: proc(tilemap: ^Tilemap) -> GameState {
     state: GameState
+    state.tilemap = tilemap
 
     arenaBacking := make([]byte, mem.Megabyte)
     mem.arena_init(&state.entityArena, arenaBacking)
@@ -89,7 +91,7 @@ updatePlayerInput :: proc(gameState: ^GameState, inputs: ^Inputs) {
 
 updateEntities :: proc(state: ^GameState, dt: f32) {
     if state.hero != nil {
-        updateHero(state.hero, dt)
+        updateHero(state.hero, state.tilemap, dt)
     }
 
     for i in 0..<state.entityCount {

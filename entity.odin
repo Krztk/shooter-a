@@ -7,6 +7,7 @@ import "core:math"
 Entity :: struct {
     pos: rl.Vector2,
     oldPos: rl.Vector2,
+    size: rl.Vector2,
     spritePlayer: SpritePlayer,
     active: bool,
     z: f32,
@@ -17,6 +18,7 @@ createEntity :: proc(atlas: ^Atlas, pos: rl.Vector2) -> Entity {
          spritePlayer = createSpritePlayer(atlas),
          pos = pos,
          oldPos = pos,
+         size = rl.Vector2{50.0, 50.0},
          active = true,
     }
 }
@@ -50,5 +52,17 @@ drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
     
     
     // drawSpritePlayerToFrame(rf, &e.spritePlayer, interpPos, e.z)
+
     drawSpritePlayerToFrame(rf, &e.spritePlayer, renderPos, e.z)
+
+
+    collisionRect := rl.Rectangle{
+        x = e.pos.x - e.size.x / 2,
+        y = e.pos.y - e.size.y / 2,
+        width = e.size.x,
+        height = e.size.y,
+    }
+
+
+    pushDebugRectangle(rf, collisionRect)
 }
