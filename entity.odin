@@ -45,20 +45,20 @@ drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
         e.oldPos.y + (e.pos.y - e.oldPos.y) * blendFactor,
     }
 
-    renderPos := rl.Vector2{
-        math.round(interpPos.x),
-        math.round(interpPos.y),
-    }
-    
-    
-    // drawSpritePlayerToFrame(rf, &e.spritePlayer, interpPos, e.z)
 
+    renderPos := interpPos
+
+    // renderPos := rl.Vector2{
+    //     math.round(interpPos.x),
+    //     math.round(interpPos.y),
+    // }
+    
+    
     drawSpritePlayerToFrame(rf, &e.spritePlayer, renderPos, e.z)
 
-
     collisionRect := rl.Rectangle{
-        x = e.pos.x - e.size.x / 2,
-        y = e.pos.y - e.size.y / 2,
+        x = e.pos.x,
+        y = e.pos.y,
         width = e.size.x,
         height = e.size.y,
     }

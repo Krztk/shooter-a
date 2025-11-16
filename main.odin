@@ -3,6 +3,7 @@ package main
 import rl "vendor:raylib"
 import "core:fmt"
 import "core:math"
+import "core:strings"
 
 totalGroups := 0
 groupIndex := 0;
@@ -40,7 +41,7 @@ main :: proc() {
         target   = rl.Vector2{0, 0},
         offset   = rl.Vector2{f32(screenWidth / 2), f32(screenHeight / 2)},
         rotation = 0.0,
-        zoom     = 2,
+        zoom     = 3.0,
     }
 
     renderFrame := initRenderFrame()
@@ -87,6 +88,11 @@ main :: proc() {
         drawTilemap(&tilemap, camera)
         flushRenderFrame(&renderFrame)
         rl.EndMode2D()
+
+        str := fmt.tprintf("Vector2(%v, %v)", gameState.hero.pos.x, gameState.hero.pos.y)
+        text_cstr := strings.clone_to_cstring(str)
+        defer delete(text_cstr)
+        rl.DrawText(text_cstr, 0, 0, 18, rl.BLACK)
 
         rl.EndDrawing()
     }

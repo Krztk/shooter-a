@@ -81,6 +81,6 @@ flushRenderFrame :: proc(rf: ^RenderFrame) {
 
     for i in 0..<rf.debugCommandCount {
         cmd := rf.debugCommands[i]
-        rl.DrawRectangleRec(cmd.rect, cmd.color)
+        rl.DrawRectangleLinesEx(cmd.rect, 1.0, cmd.color)
     }
 }
