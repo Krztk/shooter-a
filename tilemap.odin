@@ -197,3 +197,62 @@ checkTilemapCollision :: proc(tilemap: ^Tilemap, rect: rl.Rectangle) -> bool {
     
     return false
 }
+
+getTileColliders :: proc(tilemap: ^Tilemap, actor: rl.Rectangle, allocator := context.temp_allocator) -> [dynamic]rl.Rectangle {
+    colliders := make([dynamic]rl.Rectangle, allocator)
+    
+    left := int(actor.x / f32(tilemap.tilewidth))
+    right := int((actor.x + actor.width - 1) / f32(tilemap.tilewidth))
+    top := int(actor.y / f32(tilemap.tileheight))
+    bottom := int((actor.y + actor.height - 1) / f32(tilemap.tileheight))
+    
+    for y in top..=bottom {
+        for x in left..=right {
+            if isTileCollision(tilemap, x, y) {
+                tileRect := rl.Rectangle{
+                    x = f32(x * tilemap.tilewidth),
+                    y = f32(y * tilemap.tileheight),
+                    width = f32(tilemap.tilewidth),
+                    height = f32(tilemap.tileheight),
+                }
+                append(&colliders, tileRect)
+            }
+        }
+    }
+    
+    return colliders
+}
+
+resolveMapCollisions :: proc(tilemap: ^Tilemap, actor: ^rl.Rectangle) {
+    colliders := getTileColliders(tilemap, actor^)
+    defer delete(colliders)
+    
+    if len(colliders) == 0 do return
+    
+    // Run multiple iterations to handle corners and tight passages
+    for iter in 0..<3 {
+        // Find the collision with the largest overlap area
+        mostOverlap := SignedRect{0, 0, 0, 0}
+        maxArea := f32(0)
+        
+        for collider in colliders {
+            overlap := signedCollisionRect(collider, actor^)
+            area := abs(overlap.width * overlap.height)
+            
+            if area > maxArea {
+                maxArea = area
+                mostOverlap = overlap
+            }
+        }
+        
+        // No overlaps found
+        if maxArea == 0 do break
+        
+        // Resolve along the smallest axis
+        if abs(mostOverlap.width) < abs(mostOverlap.height) {
+            actor.x += mostOverlap.width
+        } else {
+            actor.y += mostOverlap.height
+        }
+    }
+}

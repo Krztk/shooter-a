@@ -41,7 +41,7 @@ main :: proc() {
         target   = rl.Vector2{0, 0},
         offset   = rl.Vector2{f32(screenWidth / 2), f32(screenHeight / 2)},
         rotation = 0.0,
-        zoom     = 3.0,
+        zoom     = 1.0,
     }
 
     renderFrame := initRenderFrame()

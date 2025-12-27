@@ -14,32 +14,20 @@ HERO_SPEED :: 200
 updateHero :: proc(hero: ^Hero, tilemap: ^Tilemap, dt: f32) {
     hero.oldPos = hero.pos
     
-    newPosX := hero.pos + rl.Vector2{hero.direction.x * HERO_SPEED * dt, 0}
-    rectX := rl.Rectangle{
-        x = newPosX.x,
+    hero.pos.x += hero.direction.x * HERO_SPEED * dt
+    hero.pos.y += hero.direction.y * HERO_SPEED * dt
+    
+    actorRect := rl.Rectangle{
+        x = hero.pos.x,
         y = hero.pos.y,
         width = hero.size.x,
         height = hero.size.y,
     }
     
-    if !checkTilemapCollision(tilemap, rectX) {
-        hero.pos.x = newPosX.x
-    } else {
-        fmt.printfln("collision hero pos.x: %v coll rect: %v", hero.pos.x, rectX)
-
-    }
+    resolveMapCollisions(tilemap, &actorRect)
     
-    newPosY := hero.pos + rl.Vector2{0, hero.direction.y * HERO_SPEED * dt}
-    rectY := rl.Rectangle{
-        x = hero.pos.x,
-        y = newPosY.y,
-        width = hero.size.x,
-        height = hero.size.y,
-    }
-    
-    if !checkTilemapCollision(tilemap, rectY) {
-        hero.pos.y = newPosY.y
-    }
+    hero.pos.x = actorRect.x
+    hero.pos.y = actorRect.y
     
     updateEntity(hero, dt)
 }
