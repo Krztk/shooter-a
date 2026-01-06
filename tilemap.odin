@@ -201,10 +201,10 @@ checkTilemapCollision :: proc(tilemap: ^Tilemap, rect: rl.Rectangle) -> bool {
 getTileColliders :: proc(tilemap: ^Tilemap, actor: rl.Rectangle, allocator := context.temp_allocator) -> [dynamic]rl.Rectangle {
     colliders := make([dynamic]rl.Rectangle, allocator)
     
-    left := int(actor.x / f32(tilemap.tilewidth))
-    right := int((actor.x + actor.width - 1) / f32(tilemap.tilewidth))
-    top := int(actor.y / f32(tilemap.tileheight))
-    bottom := int((actor.y + actor.height - 1) / f32(tilemap.tileheight))
+    left := int(actor.x / f32(tilemap.tilewidth)) - 1
+    right := int((actor.x + actor.width - 1) / f32(tilemap.tilewidth)) + 1
+    top := int(actor.y / f32(tilemap.tileheight)) - 1
+    bottom := int((actor.y + actor.height - 1) / f32(tilemap.tileheight)) + 1
     
     for y in top..=bottom {
         for x in left..=right {
@@ -223,11 +223,14 @@ getTileColliders :: proc(tilemap: ^Tilemap, actor: rl.Rectangle, allocator := co
     return colliders
 }
 
-resolveMapCollisions :: proc(tilemap: ^Tilemap, actor: ^rl.Rectangle) {
+resolveMapCollisions :: proc(tilemap: ^Tilemap, actor: ^rl.Rectangle) -> rl.Vector2 {
     colliders := getTileColliders(tilemap, actor^)
     defer delete(colliders)
+
     
-    if len(colliders) == 0 do return
+    if len(colliders) == 0 do return rl.Vector2{0,0}
+
+    correction := rl.Vector2{actor.x, actor.y}
     
     // Run multiple iterations to handle corners and tight passages
     for iter in 0..<3 {
@@ -251,8 +254,14 @@ resolveMapCollisions :: proc(tilemap: ^Tilemap, actor: ^rl.Rectangle) {
         // Resolve along the smallest axis
         if abs(mostOverlap.width) < abs(mostOverlap.height) {
             actor.x += mostOverlap.width
+            // fmt.printfln("actorX += %v", mostOverlap.width)
         } else {
             actor.y += mostOverlap.height
         }
     }
+
+    correction.x -= actor.x
+    correction.y -= actor.y
+
+    return correction
 }

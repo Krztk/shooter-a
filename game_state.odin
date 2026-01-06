@@ -48,6 +48,7 @@ spawnHero :: proc(state: ^GameState, atlas: ^Atlas, pos: rl.Vector2) -> ^Hero {
     hero := new(Hero, arenaAlloc)
     hero.entity = entity
     hero.direction = rl.Vector2{0, 0}
+    hero.velocity = rl.Vector2{0, 0}
     
     state.hero = hero
     
@@ -78,9 +79,9 @@ updatePlayerInput :: proc(gameState: ^GameState, inputs: ^Inputs) {
     if inputs.up.active do direction.y -= 1
     if inputs.down.active do direction.y += 1
 
-    if direction.x != 0 || direction.y != 0 {
-        direction = rl.Vector2Normalize(direction)
-    } 
+    // if direction.x != 0 || direction.y != 0 {
+        // direction = rl.Vector2Normalize(direction)
+    // } 
 
     gameState.hero.direction = direction
 

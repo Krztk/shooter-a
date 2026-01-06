@@ -89,7 +89,7 @@ main :: proc() {
         flushRenderFrame(&renderFrame)
         rl.EndMode2D()
 
-        str := fmt.tprintf("Vector2(%v, %v)", gameState.hero.pos.x, gameState.hero.pos.y)
+        str := fmt.tprintf("%v\nvelocity: %v", gameState.hero.pos, gameState.hero.velocity)
         text_cstr := strings.clone_to_cstring(str)
         defer delete(text_cstr)
         rl.DrawText(text_cstr, 0, 0, 18, rl.BLACK)

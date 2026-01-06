@@ -26,8 +26,9 @@ createEntity :: proc(atlas: ^Atlas, pos: rl.Vector2) -> Entity {
 updateEntity :: proc(e: ^Entity, dt: f32) {
     if !e.active do return
     
+    // let's move it to hero, enemy, bullet, and entities like that
     // Store old position before updating
-    e.oldPos = e.pos
+    // e.oldPos = e.pos
     
     updateSpritePlayer(&e.spritePlayer, dt)
 }
@@ -53,7 +54,6 @@ drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
     //     math.round(interpPos.y),
     // }
     
-    
     drawSpritePlayerToFrame(rf, &e.spritePlayer, renderPos, e.z)
 
     collisionRect := rl.Rectangle{
@@ -62,7 +62,6 @@ drawEntityToFrame :: proc(rf: ^RenderFrame, e: ^Entity, blendFactor: f32) {
         width = e.size.x,
         height = e.size.y,
     }
-
 
     pushDebugRectangle(rf, collisionRect)
 }
